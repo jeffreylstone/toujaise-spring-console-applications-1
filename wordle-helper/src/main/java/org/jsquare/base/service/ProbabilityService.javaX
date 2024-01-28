@@ -1,0 +1,22 @@
+/**
+ * ProbabilityService.java
+ * 
+ * jeffrey.l.stone@gmailcom
+ * 20240103
+ * 
+ */
+package org.jsquare.base.service;
+
+/**
+ * ProbabilityService
+ */
+public interface ProbabilityService {
+	
+	
+	
+	
+	
+	
+	
+
+}

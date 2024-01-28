@@ -1,0 +1,45 @@
+Design for wordle-helper
+
+rules format: {letter}:{condition}, ... up to 5 rules
+
+letter:  [a-z]
+condition: {-[0-5]}
+[1-5]: letter match in designated position -- rule0
+-[1-5]: letter match in other than designated position -- rule1
+0: letter does not match any in solution -- rule2
+
+Rule {
+int ruleNumber; // 0, 1, or 2
+char matchCharacter;	// a-z
+int matchPosition;	// 1-5
+}
+
+
+// initialize availableWords from availableWordsList
+availableWords = initializeAvailableWords();
+
+for (int i = 0; i < nbrOfRulesRead; i++) {
+	Rule currentRule = parseRule(element[i]);
+	
+	switch (currentRule.getRuleNumber()) {
+		case 0:
+			availableWords = rule0(availableWords, currentRule.getMatchCharacter(), currentRule.getMatchPosition());
+			break;
+		case 1:
+			availableWords = rule1(availableWords, currentRule.getMatchCharacter(), currentRule.getMatchPosition());
+			break;
+		case 2:
+		default:
+			availableWords = rule2(availableWords, currentRule.getMatchCharacter(), currentRule.getMatchPosition());
+			break;
+	}
+}
+
+// calculate probabilities of remaining words
+
+// display remaining words from highest to lowest probability
+
+
+
+
+

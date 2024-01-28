@@ -1,0 +1,73 @@
+Wordle is such a simple game that there are hardly any rules. But here you go:
+
+You have to guess the Wordle in six goes or less
+Every word you enter must be in the word list. There are more than 10,000 words in this list, but only 2,309 (at the time of writing) are answers to a specific puzzle
+A correct letter turns green
+A correct letter in the wrong place turns yellow
+An incorrect letter turns gray
+Letters can be used more than once
+Answers are never plurals
+
+------------------------------------------------------------
+
+One of them was programmer and game designer Tyler Glaiel, who assigned each letter in Wordle's 12,972 possible guesses a score of 0, 1 or 2, based on whether it is included in one of the 2,309 answers or not, and whether it is in the right place. 
+
+After checking all 12,972 words, the algorithm determined that the best starting options are:
+
+SOARE
+ROATE
+RAISE
+For reasons that are too complex to go into here, Glaiel concludes that ROATE is the best Wordle start word if you want to rule out possible answers as quickly as possible. 
+
+However, because ROATE doesn't actually feature in Wordle's possible answers list itself, you'll never get a 1/6 with it. For that reason, Glaiel recommends starting with RAISE. 
+
+Programmer Bertrand Fan took a similar approach and unsurprisingly came up with a very similar list:
+
+SOARE
+SAREE
+SEARE
+STARE
+ROATE
+Given that the top three don't feature in Wordle's possible answers list, that would make STARE the statistically best Wordle start word, based on Fan's analysis at least.
+
+Coincidentally, Stare is the word independently picked by some of the Tom's Guide team months ago, without having seen that research, so that's the one we'd go for. 
+
+That decision was instead based on common sense; after all, S is the most common first letter among Wordle answers, A is the most common third letter and E the most common fifth letter. T and R, meanwhile, are the two most common consonants overall in the game.
+
+So there you have it — for the Tom's Guide team at least, the best Wordle start word is STARE.
+
+Though, a pair of MIT researchers have their own pick: SALET (a light medieval helmet). That also gives you five of the top 10 letters, but we're not as keen on it as STARE — as R is the third-most-used letter, and L is the sixth-most-used. A good alternate for sure.
+
+------------------------------------------------------------
+
+As a result of those changes, WordleBot now considers SLATE to be the best opening word, followed closely by LEAST (when playing in Hard mode). 
+
+A while back, the best starting word was CRANE, which goes to show how the words that have been used has changed the metrics. Another excellent starting word, according to the Times, is DEALT.
+
+Here are some of WordleBot's favorite starting words:
+
+SLATE (99)
+TRACE (99)
+CARTE (99)
+SLANT (99)
+CRATE (98)
+CRANE (98)
+LEAST (98)
+CARET (98)
+STALE (98)
+
+------------------------------------------------------------
+
+Of course sometimes even a great start word won't earn you any yellow or green results. If that happens, you'll need a good second word.
+
+Which you choose will obviously depend on what your first word was, as you won't want to repeat any letters you've already used. But if I assume you're following this advice (you're going to do so, right) and using STARE as your Wordle start word, I'd recommend PHONY, COULD or DOING as good second options.
+
+PHONY is a statistically better option as a second word, because Y is one of the most frequent fifth letters. However, COULD and DOING both use two vowels, and playing your vowels early is always a good strategy, as described above.
+
+------------------------------------------------------------
+
+Average Wordle Answer will have 3 consonants, 2 vowels...
+
+
+
+
