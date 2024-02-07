@@ -63,13 +63,7 @@ public class WordGeneratorApplication implements CommandLineRunner {
         dictionary.loadDictionary(environment.getProperty("dictionary.filename", "index.dic"));
         
 //        // TEST
-//        String text = "PFX A   0     re         .";
-//        String[] elements = text.split("\\s+");
-//        
-//        System.out.println("Number of elements: " + elements.length);
-        
-        // TEST
-        dictionary.loadDictionarySampleTest();
+//        dictionary.loadDictionarySampleTest();
         
         // Start user loop
         Boolean getNextSeed = Boolean.TRUE;
@@ -105,17 +99,25 @@ public class WordGeneratorApplication implements CommandLineRunner {
         			}
         		}
         		
-        		System.out.println("----------------------------------------");
-        		for (String goodWord : validWords) {
-        			System.out.println(goodWord);
-        		}
+//        		System.out.println("----------------------------------------");
+//        		for (String goodWord : validWords) {
+//        			System.out.println(goodWord);
+//        		}
 
         		System.out.println("----------------------------------------");
         		for (Integer currentLength : validWordsByLength.keySet()) {
         			System.out.println(currentLength + ": ");
+        			int lineLength = 0;
         			for (String currentWord : validWordsByLength.get(currentLength)) {
-        				System.out.println(currentWord);
+        				System.out.print(currentWord);
+        				System.out.print("  ");
+        				lineLength += currentWord.length() + 2;
+        				if (lineLength > 72) {
+        					System.out.println("");
+        					lineLength = 0;
+        				}
         			}
+        			System.out.println("");
         		}
         	}
         	else {

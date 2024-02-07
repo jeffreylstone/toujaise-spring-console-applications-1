@@ -31,8 +31,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DictionaryServiceImpl implements DictionaryService {
 	
-//	private JLanguageTool languageTool;
-	
 	private HashSet<String> dictionary = null;
 	private TreeMap<String, Affix> affixes = null;
 
@@ -62,23 +60,21 @@ public class DictionaryServiceImpl implements DictionaryService {
 					}
 
 					int separatorPosition = 0;
-					// eliminate rules (after / , if exists)
+					// Find rules (after / , if exists)
 					if (-1 == (separatorPosition = line.indexOf("/"))) {
 						// insert into HashSet
 						this.dictionary.add(line.trim());
 					}
 					else {
-						// insert into HashSet
+						// divide into base and affix string
 						String base = line.substring(0, separatorPosition).trim();
 						String affixString = line.substring(separatorPosition + 1).trim();
 						
-						this.dictionary.add(line.substring(0, separatorPosition).trim());
-						
 						// apply prefixes/suffixes per rules and add to dictionary...
-						
-						
-						
-						
+						List<String> baseAndDerivedWords = this.baseAndDerivedWords(base, affixString);
+						for (String currentWord : baseAndDerivedWords) {
+							this.dictionary.add(currentWord);
+						}
 					}
 				}
 				else {
@@ -87,44 +83,32 @@ public class DictionaryServiceImpl implements DictionaryService {
 					capacityRead = Boolean.TRUE;
 				}
 			}
+			
+			System.out.println("Initial Capacity: " + capacity);
+			System.out.println("Actual Size (entries): " + this.dictionary.size());
 		}
 		catch (IOException ioe) {
 			throw new IllegalStateException("DictionaryServiceImpl");
 		}
 
 		System.out.println("Loaded!");
-
-//		if (null == this.languageTool) {
-//			this.languageTool = new JLanguageTool(Languages.getLanguageForShortCode("en-US"));
-//		}
 	}
 
 	@Override
 	public Boolean isDictionaryWord(String testString) {
-		// TODO Auto-generated method stub
 		Boolean isWord = Boolean.FALSE;
 		
 		if (null != this.dictionary) {
 			if (this.dictionary.contains(testString)) {
 				isWord = Boolean.TRUE;
 			}
+			else {
+				String secondTestString = String.valueOf(testString.charAt(0)).toUpperCase() + testString.substring(1);
+				if (this.dictionary.contains(secondTestString)) {
+					isWord = Boolean.TRUE;
+				}
+			}
 		}
-		
-//		if (null != this.languageTool) {
-//			try {
-//				List<RuleMatch> ruleMatches = this.languageTool.check(testString);
-//				
-//				if (ruleMatches.isEmpty()) {
-//					isWord = Boolean.TRUE;
-//				}
-//			}
-//			catch (IOException ioe) {
-//				throw new IllegalStateException("1");
-//			}
-//		}
-//		else {
-//			throw new IllegalStateException("Dictionary NOT Loaded!");
-//		}
 		
 		return isWord;
 	}
@@ -281,26 +265,67 @@ public class DictionaryServiceImpl implements DictionaryService {
 				String base = current.substring(0, separatorPosition).trim();
 				String affixString = current.substring(separatorPosition + 1).trim();
 				
+				List<String> baseAndDerivedWords = this.baseAndDerivedWords(base, affixString);
+				
 				System.out.println("--------------------");
 				System.out.println(base);
 				System.out.println(affixString);
-				
-				for (int i = 0; i < affixString.length(); i++) {
-					String key = String.valueOf(affixString.charAt(i));
-					Affix affix = this.affixes.get(key);
-					
-					String next = null;
-					// is affix Prefix or Suffix
-					if (Affix.AFFIX_PREFIX == affix.getAffixType()) {
-						next = this.applyPrefix(base, affix);
-					}
-					else {
-						next = this.applySuffix(base, affix);
-					}
 
-					// 
-					System.out.println(next);
+				for (String currentWord : baseAndDerivedWords) {
+					System.out.println(currentWord);
 				}
+				
+//				System.out.println("--------------------");
+//				System.out.println(base);
+//				System.out.println(affixString);
+//				List<Affix[]> affixCombos = this.affixCombinations(affixString);
+//				for (Affix[] currentAffixCombo : affixCombos) {
+//					if (currentAffixCombo.length == 2) {
+//						System.out.print(currentAffixCombo[0].getId());
+//						System.out.print(currentAffixCombo[1].getId());
+//						System.out.print(" ");
+//					}
+//					else if (currentAffixCombo.length == 1) {
+//						System.out.print(currentAffixCombo[0].getId());
+//						System.out.print(" ");
+//					}
+//				}
+//				System.out.println("");
+				
+//				for (int i = 0; i < affixString.length(); i++) {
+//					String key = String.valueOf(affixString.charAt(i));
+//					Affix affix = this.affixes.get(key);
+//					
+//					String next = null;
+//					// is affix Prefix or Suffix
+//					if (Affix.AFFIX_PREFIX == affix.getAffixType()) {
+//						next = this.applyPrefix(base, affix);
+//					}
+//					else {
+//						next = this.applySuffix(base, affix);
+//					}
+//
+//					// 
+//					System.out.println(next);
+//				}
+				
+//				for (Affix[] currentAffixCombo : affixCombos) {
+//					String next = null;
+//					if (currentAffixCombo.length == 2) {
+//						next = this.applyPrefix(base, currentAffixCombo[0]);
+//						next = this.applySuffix(next, currentAffixCombo[1]);
+//					}
+//					else if (currentAffixCombo.length == 1) {
+//						// is affix Prefix or Suffix
+//						if (Affix.AFFIX_PREFIX == currentAffixCombo[0].getAffixType()) {
+//							next = this.applyPrefix(base, currentAffixCombo[0]);
+//						}
+//						else {
+//							next = this.applySuffix(base, currentAffixCombo[0]);
+//						}
+//					}
+//					System.out.println(next);
+//				}
 			}
 		}
 	}
@@ -342,7 +367,6 @@ public class DictionaryServiceImpl implements DictionaryService {
 	}
 
 	private String applyPrefix(String base, Affix affix) {
-		// TODO Auto-generated method stub
 		String firstChar = String.valueOf(base.charAt(0));
 		StringBuilder buffer = new StringBuilder();
 		
@@ -372,9 +396,80 @@ public class DictionaryServiceImpl implements DictionaryService {
 			}
 		}
 		
-//		buffer.append(affix.getId()).append("-prefixed-").append(base);
-		
 		return buffer.toString();
 	}
+	
+	private List<Affix[]> affixCombinations(String affixString) {
+		List<Affix[]> combinations = new ArrayList<>();
+		List<Affix> suffixablePrefixes = new ArrayList<>();
+		List<Affix> prefixableSuffixes = new ArrayList<>();
 
+		// read thru affixString, one class at a time
+		for (int i = 0; i < affixString.length(); i++) {
+			String key = String.valueOf(affixString.charAt(i));
+			Affix affix = this.affixes.get(key);
+			if (null != affix) {
+				Affix[] affixSingle = new Affix[1];
+				affixSingle[0] = affix;
+				combinations.add(affixSingle);
+				
+				// if crossProduct == Y, 
+				if (affix.isCrossProductFlag()) {
+					// if prefix, add class to suffixablePrefixes
+					if (Affix.AFFIX_PREFIX == affix.getAffixType()) {
+						suffixablePrefixes.add(affix);
+					}
+					// else (suffix) add class to prefixableSuffixes
+					else {
+						prefixableSuffixes.add(affix);
+					}
+				}
+			}
+			else {
+				//System.out.println("No affix for: " + key);
+				// letters in affix string not found as affixes may be 
+				//  compound rules or other non-prefix/non-suffix rules...
+			}
+		}
+		
+		// for non-empty suffixablePrefixes, prefixableSuffixes, form possible combinations, add to combinations
+		for (Affix currentPrefix : suffixablePrefixes) {
+			for (Affix currentSuffix : prefixableSuffixes) {
+				Affix[] affixDouble = new Affix[2];
+				affixDouble[0] = currentPrefix;
+				affixDouble[1] = currentSuffix;
+				combinations.add(affixDouble);
+			}
+		}
+		
+		return combinations;
+	}
+	
+	private List<String> baseAndDerivedWords(String base, String affixString) {
+		List<String> baseAndDerivedWords = new ArrayList<>();
+		
+		baseAndDerivedWords.add(base);
+		
+		List<Affix[]> affixCombos = this.affixCombinations(affixString);
+
+		for (Affix[] currentAffixCombo : affixCombos) {
+			String next = null;
+			if (currentAffixCombo.length == 2) {
+				next = this.applyPrefix(base, currentAffixCombo[0]);
+				next = this.applySuffix(next, currentAffixCombo[1]);
+			}
+			else if (currentAffixCombo.length == 1) {
+				// is affix Prefix or Suffix
+				if (Affix.AFFIX_PREFIX == currentAffixCombo[0].getAffixType()) {
+					next = this.applyPrefix(base, currentAffixCombo[0]);
+				}
+				else {
+					next = this.applySuffix(base, currentAffixCombo[0]);
+				}
+			}
+			baseAndDerivedWords.add(next);
+		}
+		
+		return baseAndDerivedWords;
+	}
 }
