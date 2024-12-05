@@ -332,7 +332,7 @@ public class DictionaryServiceImpl implements DictionaryService {
 
 	private String applySuffix(String base, Affix affix) {
 		
-		String lastChar = String.valueOf(base.charAt(base.length() - 1));
+		int lastIndex = base.length();
 		StringBuilder buffer = new StringBuilder();
 		
 		boolean matched = false;
@@ -349,16 +349,19 @@ public class DictionaryServiceImpl implements DictionaryService {
 				matched = true;
 			}
 			else {
-				Matcher matcher = rule.getConditionPattern().matcher(lastChar);
-				if (matcher.matches()) {
-					if (base.endsWith(rule.getStrippingCharacters())) {
-						int index = base.lastIndexOf(rule.getStrippingCharacters());
-						buffer.append(base.substring(0, index)).append(rule.getAffix());
+				Matcher matcher = rule.getConditionPattern().matcher(base);
+				while (matcher.find() && !matched) {
+					// if match occurs at end of word (base)
+					if (lastIndex == matcher.end()) {
+						if (base.endsWith(rule.getStrippingCharacters())) {
+							int index = base.lastIndexOf(rule.getStrippingCharacters());
+							buffer.append(base.substring(0, index)).append(rule.getAffix());
+						}
+						else {
+							buffer.append(base).append(rule.getAffix());
+						}
+						matched = true;
 					}
-					else {
-						buffer.append(base).append(rule.getAffix());
-					}
-					matched = true;
 				}
 			}
 		}
@@ -367,7 +370,6 @@ public class DictionaryServiceImpl implements DictionaryService {
 	}
 
 	private String applyPrefix(String base, Affix affix) {
-		String firstChar = String.valueOf(base.charAt(0));
 		StringBuilder buffer = new StringBuilder();
 		
 		boolean matched = false;
@@ -383,15 +385,17 @@ public class DictionaryServiceImpl implements DictionaryService {
 				matched = true;
 			}
 			else {
-				Matcher matcher = rule.getConditionPattern().matcher(firstChar);
-				if (matcher.matches()) {
-					if (base.startsWith(rule.getStrippingCharacters())) {
-						buffer.append(rule.getAffix()).append(base.substring(rule.getStrippingCharacters().length()));
+				Matcher matcher = rule.getConditionPattern().matcher(base);
+				if (matcher.lookingAt()) {
+					if (0 == matcher.start()) {
+						if (base.startsWith(rule.getStrippingCharacters())) {
+							buffer.append(rule.getAffix()).append(base.substring(rule.getStrippingCharacters().length()));
+						}
+						else {
+							buffer.append(rule.getAffix()).append(base);
+						}
+						matched = true;
 					}
-					else {
-						buffer.append(rule.getAffix()).append(base);
-					}
-					matched = true;
 				}
 			}
 		}

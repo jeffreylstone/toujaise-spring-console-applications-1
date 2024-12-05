@@ -16,6 +16,8 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class UserInterfaceServiceImpl implements UserInterfaceService {
+	
+	private Integer permutationsWordLength;
 
 	@Override
 	public String getNextCharacterString() {
@@ -32,8 +34,6 @@ public class UserInterfaceServiceImpl implements UserInterfaceService {
 			
 			// readAllBytes, then trim to "max nbr of chars" length
 			
-			
-			
 			seedChars = new String(seedBytes, 0, charsRead);
 			
 			int position = 0;
@@ -45,6 +45,26 @@ public class UserInterfaceServiceImpl implements UserInterfaceService {
 				}
 			}
 			
+			String[] elements = seedChars.split(" ");
+			
+			if (2 == elements.length) {
+				try {
+					Integer permsWordLength = Integer.valueOf(elements[1].trim());
+					permutationsWordLength = permsWordLength;
+					seedChars = elements[0].trim();
+				}
+				catch (NumberFormatException nfe) {
+					// recurse
+					System.out.println("\nYou entered:  " + seedChars);
+					return getNextCharacterString();
+				}
+			}
+			else if (2 < elements.length) {
+				// recurse
+				System.out.println("\nYou entered:  " + seedChars);
+				return getNextCharacterString();
+			}
+			
 			// temp logging
 			System.out.println("\nYou entered:  " + seedChars);
 		}
@@ -53,6 +73,11 @@ public class UserInterfaceServiceImpl implements UserInterfaceService {
 		}
 
 		return seedChars;
+	}
+
+	@Override
+	public Integer getPermutationsWordLength() {
+		return permutationsWordLength;
 	}
 
 }
