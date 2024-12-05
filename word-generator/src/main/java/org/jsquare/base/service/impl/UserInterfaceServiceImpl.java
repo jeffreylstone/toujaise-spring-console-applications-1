@@ -24,6 +24,8 @@ public class UserInterfaceServiceImpl implements UserInterfaceService {
 		// TODO Auto-generated method stub
 		String seedChars = null;
 		
+		this.permutationsWordLength = null;
+		
 		System.out.println("\nEnter next set of characters (or /q to quit):  ");
 		
 		byte[] seedBytes = new byte[15];
